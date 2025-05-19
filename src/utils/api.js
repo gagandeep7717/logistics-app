@@ -14,7 +14,8 @@ export const fetchApi = async (endpoint, options = {}) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('API call failed:', error);
     throw error;
