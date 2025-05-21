@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,13 +7,16 @@ import { login } from '@/api/auth';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState(location.state?.message || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setMessage('');
 
     const formData = new FormData(e.target);
     const username = formData.get('username');
@@ -29,7 +32,7 @@ export default function LoginPage() {
       // Redirect to accounts page
       navigate('/accounts');
     } catch (err) {
-      setError('Invalid username or password');
+      setError(err.message || 'Invalid username or password');
     } finally {
       setIsLoading(false);
     }
@@ -68,6 +71,10 @@ export default function LoginPage() {
 
           {error && (
             <div className="text-sm text-destructive text-center">{error}</div>
+          )}
+
+          {message && (
+            <div className="text-sm text-green-600 text-center">{message}</div>
           )}
 
           <Button

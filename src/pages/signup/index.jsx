@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { signup } from '@/api/auth';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -27,11 +28,23 @@ export default function SignupPage() {
     }
 
     try {
-      // TODO: Implement actual signup logic
-      // For now, just redirect to login
-      navigate('/login');
+      const { token, user } = await signup(name, username, password);
+      
+      if (token) {
+        // Store auth data
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/accounts');
+      } else {
+        // If no token, user needs to verify their email
+        navigate('/login', { 
+          state: { 
+            message: 'Please check your email to verify your account' 
+          }
+        });
+      }
     } catch (err) {
-      setError('Failed to create account');
+      setError(err.message || 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
