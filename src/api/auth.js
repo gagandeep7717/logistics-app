@@ -1,20 +1,20 @@
 // Mock user data for development
 const MOCK_USER = {
-  email: 'admin@example.com',
+  username: 'admin',
   password: 'admin123',
   name: 'Admin User'
 };
 
-export const login = async (email, password) => {
+export const login = async (username, password) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
 
   // For development, check against mock user
-  if (email === MOCK_USER.email && password === MOCK_USER.password) {
+  if (username === MOCK_USER.username && password === MOCK_USER.password) {
     return {
       token: 'mock-jwt-token',
       user: {
-        email: MOCK_USER.email,
+        username: MOCK_USER.username,
         name: MOCK_USER.name
       }
     };

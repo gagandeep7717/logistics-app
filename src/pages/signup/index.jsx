@@ -16,7 +16,7 @@ export default function SignupPage() {
 
     const formData = new FormData(e.target);
     const name = formData.get('name');
-    const email = formData.get('email');
+    const username = formData.get('username');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirmPassword');
 
@@ -58,13 +58,13 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="email"
-              name="email"
-              type="email"
+              id="username"
+              name="username"
+              type="text"
               required
-              placeholder="Enter your email"
+              placeholder="Choose a username"
             />
           </div>
 

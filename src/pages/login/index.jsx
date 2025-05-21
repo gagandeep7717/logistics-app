@@ -16,11 +16,11 @@ export default function LoginPage() {
     setError('');
 
     const formData = new FormData(e.target);
-    const email = formData.get('email');
+    const username = formData.get('username');
     const password = formData.get('password');
 
     try {
-      const { token, user } = await login(email, password);
+      const { token, user } = await login(username, password);
       
       // Store auth data
       localStorage.setItem('token', token);
@@ -29,7 +29,7 @@ export default function LoginPage() {
       // Redirect to accounts page
       navigate('/accounts');
     } catch (err) {
-      setError('Invalid email or password');
+      setError('Invalid username or password');
     } finally {
       setIsLoading(false);
     }
@@ -45,13 +45,13 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="email"
-              name="email"
-              type="email"
+              id="username"
+              name="username"
+              type="text"
               required
-              placeholder="Enter your email"
+              placeholder="Enter your username"
             />
           </div>
 
