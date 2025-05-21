@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useState, useEffect } from 'react';
 import AccountsPage from './pages/accounts';
 import LoginPage from './pages/login';
+import SignupPage from './pages/signup';
+import { getCurrentUser } from './api/auth';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -9,13 +11,17 @@ function App() {
 
   useEffect(() => {
     // Check if user is authenticated
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
+    const user = getCurrentUser();
+    setIsAuthenticated(!!user);
     setIsLoading(false);
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
@@ -38,6 +44,16 @@ function App() {
               <Navigate to="/accounts" replace />
             ) : (
               <LoginPage />
+            )
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/accounts" replace />
+            ) : (
+              <SignupPage />
             )
           }
         />
