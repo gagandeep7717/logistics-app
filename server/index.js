@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./config/swagger');
 require('dotenv').config();
 const supabase = require('./config/supabase');
 
@@ -7,7 +9,47 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => res.send("API Running"));
+// Swagger UI setup
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Logistics App API Documentation"
+}));
+
+// Health check endpoint
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Check API health
+ *     description: Returns a message indicating the API is running
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: API is running
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: ok
+ *                 message:
+ *                   type: string
+ *                   example: API is running
+ */
+app.get("/health", (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'API is running'
+  });
+});
+
+// Root endpoint redirects to API docs
+app.get("/", (req, res) => {
+  res.redirect('/api-docs');
+});
 
 // Test Supabase connection
 app.get("/test-db", async (req, res) => {
