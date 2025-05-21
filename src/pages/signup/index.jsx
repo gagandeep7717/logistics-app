@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signup } from '@/api/auth';
+import { AUTH_ROUTES, ERROR_MESSAGES, STORAGE_KEYS } from '@/lib/constants';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function SignupPage() {
     const confirmPassword = formData.get('confirmPassword');
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(ERROR_MESSAGES.PASSWORDS_DONT_MATCH);
       setIsLoading(false);
       return;
     }
@@ -32,19 +33,19 @@ export default function SignupPage() {
       
       if (token) {
         // Store auth data
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        navigate('/accounts');
+        localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+        navigate(AUTH_ROUTES.ACCOUNTS);
       } else {
         // If no token, user needs to verify their email
-        navigate('/login', { 
+        navigate(AUTH_ROUTES.LOGIN, { 
           state: { 
             message: 'Please check your email to verify your account' 
           }
         });
       }
     } catch (err) {
-      setError(err.message || 'Failed to create account');
+      setError(err.message || ERROR_MESSAGES.ACCOUNT_CREATION_FAILED);
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +118,7 @@ export default function SignupPage() {
 
           <div className="text-center text-sm">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary hover:underline">
+            <Link to={AUTH_ROUTES.LOGIN} className="text-primary hover:underline">
               Sign in
             </Link>
           </div>

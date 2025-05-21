@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { STORAGE_KEYS, ERROR_MESSAGES } from '@/lib/constants';
 
 // Mock user data for development
 const MOCK_USER = {
@@ -25,7 +26,7 @@ export const login = async (username, password) => {
     };
   } catch (error) {
     console.error('Login error:', error);
-    throw new Error('Invalid username or password');
+    throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
   }
 };
 
@@ -53,7 +54,7 @@ export const signup = async (name, username, password) => {
     };
   } catch (error) {
     console.error('Signup error:', error);
-    throw new Error('Failed to create account');
+    throw new Error(ERROR_MESSAGES.ACCOUNT_CREATION_FAILED);
   }
 };
 
@@ -62,8 +63,8 @@ export const logout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER);
   } catch (error) {
     console.error('Logout error:', error);
     throw error;

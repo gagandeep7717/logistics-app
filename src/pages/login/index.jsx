@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login } from '@/api/auth';
+import { AUTH_ROUTES, ERROR_MESSAGES, STORAGE_KEYS } from '@/lib/constants';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -26,13 +27,13 @@ export default function LoginPage() {
       const { token, user } = await login(username, password);
       
       // Store auth data
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
       
       // Redirect to accounts page
-      navigate('/accounts');
+      navigate(AUTH_ROUTES.ACCOUNTS);
     } catch (err) {
-      setError(err.message || 'Invalid username or password');
+      setError(err.message || ERROR_MESSAGES.INVALID_CREDENTIALS);
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +88,7 @@ export default function LoginPage() {
 
           <div className="text-center text-sm">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-primary hover:underline">
+            <Link to={AUTH_ROUTES.SIGNUP} className="text-primary hover:underline">
               Create one
             </Link>
           </div>
